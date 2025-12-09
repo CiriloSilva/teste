@@ -23,8 +23,8 @@ Início rápido:
    - node server.js
    - Acesse https://localhost:3443 no seu PC para testar, ou https://<IP_PC>:3443 no seu celular (aceite o certificado autoassinado).
 
-3) Admin web:
-   - cd admin-web
+3) Web:
+   - cd web
    - npm install
    - instale o vite se necessário: npm install -D vite @vitejs/plugin-react
    - npm run dev
@@ -64,8 +64,8 @@ Quick start:
    - node server.js
    - Visit https://localhost:3443 on your PC to test, or https://<PC_IP>:3443 on your phone (accept self-signed cert).
 
-3) Admin web:
-   - cd admin-web
+3) Web:
+   - cd web
    - npm install
    - install vite if necessary: npm install -D vite @vitejs/plugin-react
    - npm run dev
