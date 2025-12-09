@@ -26,12 +26,34 @@ document.getElementById('btn').onclick=async ()=>{
       if(lastReadByUid[uid] && (now - lastReadByUid[uid] < DEDUPE_UID_WINDOW_MS)){ out.textContent='UID '+uid+' já lido há pouco.'; return; }
       lastReadByUid[uid] = now;
       out.textContent = 'UID: '+uid+' — Enviando...';
-      try{
-        const res = await fetch('/api/registro', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ uid, timestamp: now, device: 'WebNFC' }) });
-        const j = await res.json();
-        if(j.ignored){ out.textContent = 'Leitura ignorada (duplicada). ' + (j.user ? ('Usuario: '+j.user.name) : ''); }
-        else{ out.textContent = 'Ponto registrado. ' + (j.user ? ('Usuario: '+j.user.name + ' — ') : '') + 'ID: '+j.id; }
-      }catch(e){ out.textContent = 'Falha ao enviar: '+e; delete lastReadByUid[uid]; }
+      try {
+        const API_BASE = 'https://pontus-production.up.railway.app'; // ajusta se o host for outro
+
+        const res = await fetch(`${API_BASE}/api/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid, timestamp: now, device: 'web-nfc-https' })
+        });
+
+        let j;
+        const text = await res.text();
+        try {
+          j = JSON.parse(text);
+        } catch {
+          throw new Error(`Resposta não é JSON. Status ${res.status}. Corpo: ${text.slice(0, 80)}...`);
+        }
+
+        if (j.ignored) {
+          out.textContent = 'Leitura ignorada (duplicada). ' + (j.user ? ('Usuário: '+j.user.name) : '');
+        } else {
+          out.textContent = 'Ponto registrado. ' + (j.user ? ('Usuário: '+j.user.name + ' — ') : '') + 'ID: ' + j.id;
+        }
+      } catch (e) {
+        out.textContent = 'Falha ao enviar: ' + e;
+        delete lastReadByUid[uid];
+      }
+
+      catch(e){ out.textContent = 'Falha ao enviar: '+e; delete lastReadByUid[uid]; }
     };
   }catch(err){ out.textContent = 'Erro iniciando leitura NFC: '+err; }
 };
