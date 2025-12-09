@@ -1,4 +1,4 @@
-# Pontus Complete v1.4
+# Pontus v1.4
 
 Novidades na v1.4:
 - Associação de UID <-> Usuário (modelo de Cartão)
